@@ -24,12 +24,28 @@ print(result)
 # Ваша задача вывести дату в текстовом виде, например: второе ноября 2013 года.
 # Склонением пренебречь (2000 года, 2010 года)
 
+num = 2
+month = 11
+year = 2013
+data = {'num': num, 'month': month, 'year': year}
+print('{}.{}.{}'.format(data['num'], data['month'], data['year']))
+
+if data['num'] == 1:
+    data['num'] = 'Первое'
+elif data['num'] == 2:
+    data['num'] = 'Второе'
+elif data['num'] == 3:
+    data['num'] = 'Третье'
+
+if data['month'] == 1:
+    data['month'] = 'Января'
+elif data['month'] == 2:
+    data['month'] = 'Февраля'
+elif data['month'] == 11:
+    data['month'] = 'Ноября'
 
 
-
-
-
-
+print('{} {} {} года'.format(data['num'], data['month'], data['year']))
 
 # Задача-3: Напишите алгоритм, заполняющий список произвольными целыми числами
 # в диапазоне от -100 до 100. В списке должно быть n - элементов.
@@ -56,6 +72,14 @@ set_1 = set(lst1)
 lst2 = list(set_1)
 
 print(lst2)
+
+
+lst = [1 , 2, 4, 5, 6, 2, 5, 2]
+result = []
+for i in lst:
+	if lst.count(i) == 1:
+		result.append(i)
+print(result)
 
 
 
