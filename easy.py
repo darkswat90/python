@@ -1,76 +1,144 @@
-# Задача-1:
-# Напишите скрипт, создающий директории dir_1 - dir_9 в папке,
-# из которой запущен данный скрипт.
-# И второй скрипт, удаляющий эти папки.
+# Задача - 1
+# Опишите несколько классов TownCar, SportCar, WorkCar, PoliceCar
+# У каждого класса должны быть следующие аттрибуты:
+# speed, color, name, is_police - Булево значение.
+# А так же несколько методов: go, stop, turn(direction) - которые должны сообщать,
+#  о том что машина поехала, остановилась, повернула(куда)
 
-import os
-import shutil
+class TownCar:
+	def __init__(self, maxspeed, color, name, is_police):
+		self.maxspeed = maxspeed
+		self.color = color
+		self.name = name
+		self.is_police = False
 
-def make_dir (name):
-    try:
-        os.makedirs(name)
-    except FileExistsError:
-        print('{} - такая папка уже есть'.format(name))
+	def get_go(self):
+		print('Машина поехала')
+
+	def get_stop(self):
+		print('Машина остановилась')
+	
+	def get_direct(self):
+		dr = input ("Введите 'r', что бы повернуть на право\n Введите 'l', что бы повернууть на лево")
+		if dr == str('r'):
+			print('Машина повернула на право')
+		elif dr == str('l'):
+			print('Машина повернулана лево')
+
+mazda_car = TownCar('160', 'red', 'mazda_3', 0)
+print(mazda_car.is_police)
+mazda_car.get_direct()
+
+class SportCar:
+	def __init__(self, maxspeed, color, name, is_police):
+		self.maxspeed = maxspeed
+		self.color = color
+		self.name = name
+		self.is_police = False
+
+	def get_go(self):
+		print('Машина поехала')
+
+	def get_stop(self):
+		print('Машина остановилась')
+	
+	def get_direct(self):
+		dr = input ("Введите 'r', что бы повернуть на право\n Введите 'l', что бы повернууть на лево")
+		if dr == str('r'):
+			print('Машина повернула на право')
+		elif dr == str('l'):
+			print('Машина повернулана лево')
+
+lambo_car = SportCar('300', 'gold', 'lambo_urus', 0)
+print(lambo_car.is_police)
+lambo_car.get_direct()
+
+class WorkCar:
+	def __init__(self, maxspeed, color, name, is_police):
+		self.maxspeed = maxspeed
+		self.color = color
+		self.name = name
+		self.is_police = False
+
+	def get_go(self):
+		print('Машина поехала')
+
+	def get_stop(self):
+		print('Машина остановилась')
+	
+	def get_direct(self):
+		dr = input ("Введите 'r', что бы повернуть на право\n Введите 'l', что бы повернууть на лево")
+		if dr == str('r'):
+			print('Машина повернула на право')
+		elif dr == str('l'):
+			print('Машина повернулана лево')
+
+man_car = WorkCar('120', 'white', 'man_TGM', 0)
+print(man_car)
+man_car.get_direct()
+
+class PoliceCar:
+	def __init__(self, maxspeed, color, name, is_police):
+		self.maxspeed = maxspeed
+		self.color = color
+		self.name = name
+		self.is_police = True
+
+	def get_go(self):
+		print('Машина поехала')
+
+	def get_stop(self):
+		print('Машина остановилась')
+	
+	def get_direct(self):
+		dr = input ("Введите 'r', что бы повернуть на право\n Введите 'l', что бы повернууть на лево")
+		if dr == str('r'):
+			print('Машина повернула на право')
+		elif dr == str('l'):
+			print('Машина повернулана лево')
+
+lada_car = WorkCar('120', 'police_color', 'Lada_10', 1)
+print(lada_car)
+lada_car.get_direct()
 
 
-def remove_dir (name):
-    try:
-        os.removedirs(name)
-    except FileNotFoundError:
-        print('{} - не существует'.format(name))
+# Задача - 2
+# Посмотрите на задачу-1 подумайте как выделить общие признаки классов
+# в родительский и остальные просто наследовать от него.
+
+class TownCar:
+	def __init__(self, maxspeed, color, name, is_police):
+		self.maxspeed = maxspeed
+		self.color = color
+		self.name = name
+		self.is_police = False
+
+	def get_go(self):
+		print('Машина поехала')
+
+	def get_stop(self):
+		print('Машина остановилась')
+	
+	def get_direct(self):
+		dr = input ("Введите 'r', что бы повернуть на право\n Введите 'l', что бы повернууть на лево")
+		if dr == str('r'):
+			print('Машина повернула на право')
+		elif dr == str('l'):
+			print('Машина повернулана лево')
 
 
-def start ():
-    user_answer =''
-    count_dirs = range(1, 10)
+class SportCar(TownCar):
+	pass
 
-    while user_answer != '3':
+class WorkCar(TownCar):
+	pass
 
-        user_answer = input('Выберите пункт меню:\n'
-                       '1. Создать папки dir_1 - dir_9\n'
-                       '2. Удалить папки dir_1 - dir_9\n'
-                       '3. Выход\n')
-
-        if user_answer == '1':
-            for i in count_dirs:
-                i = str(i)
-                make_dir('dir_' + i)
-        elif user_answer == '2':
-            for i in count_dirs:
-                i = str(i)
-                remove_dir('dir_' + i)
-        elif user_answer =='3':
-            break
-
-start()
+class PoliceCar(TownCar):
+	def __init__(self, maxspeed, color, name, is_police):
+		super().__init__(maxspeed, color, name, is_police)
+		self.is_police = True
 
 
-# Задача-2:
-# Напишите скрипт, отображающий папки текущей директории.
-
-def list_dir ():
-    buffer = os.listdir()
-    print('Список файлов:')
-    for index, element in enumerate(buffer, start=1):
-        if os.path.isdir(element):
-            print('{}. {}'.format(index, element))
-
-
-list_dir()
-
-
-# Задача-3:
-# Напишите скрипт, создающий копию файла, из которого запущен данный скрипт.
-
-
-def current_file_copy ():
-    name_file = os.path.realpath(__file__)
-    new_file = name_file +'.copy'
-    if os.path.isfile(new_file) != True:
-        shutil.copy(name_file, new_file)
-        return new_file + ' - создан'
-    else:
-        return 'Копия текущего файла уже есть'
-
-
-print(current_file_copy())
+lada_car = PoliceCar('120', 'police_color', 'Lada_10', 1)
+print(lada_car.is_police)
+lada_car.get_direct()
