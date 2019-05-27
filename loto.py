@@ -1,57 +1,73 @@
-import random
+
+from random import randint
 
 class Card:
     def __init__(self, name):
-        bag = [x for x in range(1, 91)]
-        self.card = [Card.gen_string(bag), Card.gen_string(bag), Card.gen_string(bag)] #Генерирует 3 списка каждый список строка карточки
+        self.card = __class__.generate_random_card()
         self.name = name
         self.count_barrel = 15
 
+    @staticmethod
+    def generate_random_card():
+        card = [[] for _ in range(3)]
+        barrels = set()
+        while len(barrels) < 15:
+            barrels.add(randint(1, 91))
 
-    def gen_string(bag):  #Метод генерации карточек на основе мешка удаляя полученное число из "мешка", что бы числа не повторялись в карточке
-        string = ['' for _ in range(9)]           #Создается пустой список с элементами ['', '', '', '', '', '', '', '']
-        for x in range(0, 5):                      #Цилк запускающий в диапозоне от 0, 1, 2, 3, 4
-            digit = random.randint(0, 8)            #Случайны выбор позиции заменяемого элемента
-            while string[digit] != '':
-                digit = random.randint(0, 8)
-            string[digit] = bag.pop(random.randint(0, len(bag) - 1)) #Добавляет случайны номер боченка в карточку в позицию digit, после удаляя его из "мешка"
-        return string
-    #Тут я пытался сделать соритировку по возрастанию, но тут изначально в список с str добавляются int и sort(), и shuffle не подходят так как работают только с int и float
-    #Видел как делают через 'None', но так до конца и не понял как это реализовано, там уже работает sort().
-    def __str__(self):                                                      #Перегрузка оператора str, формирвание и визуализация карточки
-        result = '{:-^20}\n'.format(self.name)
+        barrels = list(barrels)
+        for index_row in range(0, 3):
+            row_indexes_should_be_fill = set()
+            while len(row_indexes_should_be_fill) < 5:
+                row_indexes_should_be_fill.add(randint(0, 8))
+
+            barrels_for_row = barrels[:5]
+            barrels_for_row.sort(reverse=True)
+            barrels = barrels[5:]
+
+            row = [''] * 9
+            for x in row_indexes_should_be_fill:
+                row[x] = barrels_for_row.pop()
+
+            card[index_row] = row
+        return card
+
+    def __str__(self):
+        rez = '{:-^26}\n'.format(self.name)
         for x in range(3):
-            result += '{:>2} {:>2} {:>2} {:>2} {:>2} {:>2} {:>2} {:>2} {:>2}'.format(*self.card[x]) + '\n'
-        return result + '--------------------------'
+            rez += '{:>2} {:>2} {:>2} {:>2} {:>2} {:>2} {:>2} {:>2} {:>2}'\
+                    .format(*self.card[x]) + '\n'
+        return rez + '--------------------------'
 
-player = Card(' Карточка игрока ') #Создания экземпляра для игрока
-computer = Card(' Карточка компьютера ') #Создание экземпляра дял компьютера
-
-bag = [x for x in range(1, 91)] #Собственно игровой мешок
+computer = Card(' Карточка компьютера ')
+player = Card(' Карточка игрока ')
+bag = [x for x in range(1, 91)]
 while True:
-    if len(bag) < 1: #Проверка, не закончились ли в мешке бочонки
-        print('Бочёнки в мешке закончились. Результат:\n у компьютера осталось {} числа/чисел,\n у игрока осталось {} числа/чисел.'.format(computer.count_barrel, player.count_barrel))
+    if len(bag) < 1:
+        print('Бочёнки в мешке закончились. Результат:\n'
+              'у компьютера осталось {} числа/чисел,\n'
+              'у игрока осталось {} числа/чисел.'
+              .format(computer.count_barrel, player.count_barrel))
         break
-    barrel = bag.pop(random.randint(0, len(bag) - 1)) #Удаляет боченок из мешка который вытащили
-    print('\nНовый бочонок: {} (осталось {})'.format(barrel, len(bag))) #Выводит инфу какой боченок и сколько осталось (капитан очевидность)
-    print(computer) #Выводит карточку компьютера
-    print(player)   #Выводит карточку игрока
-    reply = input('У вас есть такой бочонок? (y/n/q)') #Запрашивает действия от игрока
-    reply = reply.lower() #Все ответы преобразует в нижни регистр
-    while len(reply) == 0 or reply not in 'ynq': #В случае некорректного ввода повторяет информацию
-        print('\n\n!!! Не корректтный ввод!\n')
+    barrel = bag.pop(randint(0, len(bag) - 1))
+    print('\nНовый бочонок: {} (осталось {})'.format(barrel, len(bag)))
+    print(computer)
+    print(player)
+    reply = input('Зачеркнуть цифру? (y/n/q)')
+    reply = reply.lower()
+    while len(reply) == 0 or reply not in 'ynq':
+        print('\n\n!!! Ответ не распознан!\n')
         print('Новый бочонок: {} (осталось {})'.format(barrel, len(bag)))
         print(computer)
         print(player)
         reply = input('Зачеркнуть цифру? (y/n/q)')
         reply = reply.lower()
 
-    if reply == 'q': #Выходит из игры если игрок ввел 'q'
+    if reply == 'q':
         print('Вы вышли из игры. Вы так и не выиграли.')
         break
-    elif reply == 'y': #При вводде 'y'
+    elif reply == 'y':
         check = False
-        for x in range(3): #Цикл проверки если такое номер бочонка в карточке
+        for x in range(3):
             if barrel in player.card[x]:
                 check = True
                 player.card[x][player.card[x].index(barrel)] = '-'
@@ -59,19 +75,19 @@ while True:
             if barrel in computer.card[x]:
                 computer.card[x][computer.card[x].index(barrel)] = '-'
                 computer.count_barrel -= 1
-        if check: #Проверка у кого сколько не закрытых ячеек
+        if check:
             if player.count_barrel < 1:
                 print('Вы Выиграли!')
                 break
             elif computer.count_barrel < 1:
                 print('Компьютер Выиграл!')
                 break
-        else: #Если такого числа не при вводе 'y' тогда проигрыш
+        else:
             print('Вы проиграли! Такого числа нет на Вашей карточке!')
             break
     elif reply == 'n':
-        check = False
-        for x in range(3): #Проверка наличия числа в карточне, при вводе 'n'
+        check = False  # Есть ли такая цифра на карточке игрока?
+        for x in range(3):
             if barrel in player.card[x]:
                 print('Вы проиграли! Такое число есть на Вашей карточке!')
                 check = True
